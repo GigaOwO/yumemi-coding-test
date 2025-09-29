@@ -1,4 +1,6 @@
-export async function getPrefectures() {
+import { PrefectureResponse } from "./types";
+
+export async function getPrefectures(): Promise<PrefectureResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/prefectures`,
     {

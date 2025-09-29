@@ -1,8 +1,12 @@
+import { PopulationCompositionPerYearResponse } from "./types";
+
 type props = {
   prefCode: number;
 };
 
-export async function getPopulationData({ prefCode }: props) {
+export async function getPopulationData({
+  prefCode,
+}: props): Promise<PopulationCompositionPerYearResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/population/composition/perYear?prefCode=${prefCode}`,
     {
