@@ -2,32 +2,33 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Chart from "@/features/population/components/chart";
 import { SelectedPrefecture } from "@/app/page";
+import { ChartOptions } from "chart.js";
 import { PopulationCategory } from "@/features/population/types";
 
-vi.mock("react-chartjs-2", () => {
-  interface MockLineProps {
-    data: {
-      labels: unknown[];
-      datasets: unknown[];
-    };
-    options: {
-      plugins: {
-        title: {
-          text: string;
-        };
-      };
-    };
-  }
-  return {
-    Line: ({ data, options }: MockLineProps) => (
-      <div data-testid="line-chart">
-        <div data-testid="chart-title">{options.plugins.title.text}</div>
-        <div data-testid="chart-labels">{JSON.stringify(data.labels)}</div>
-        <div data-testid="chart-datasets">{JSON.stringify(data.datasets)}</div>
-      </div>
-    ),
+// Chart.jsのモック用の型定義
+interface MockLineChartProps {
+  data: {
+    labels: number[];
+    datasets: Array<{
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+    }>;
   };
-});
+  options: ChartOptions<"line">;
+}
+
+// Chart.jsのモック
+vi.mock("react-chartjs-2", () => ({
+  Line: ({ data, options }: MockLineChartProps) => (
+    <div data-testid="line-chart">
+      <div data-testid="chart-title">{options.plugins?.title?.text || ""}</div>
+      <div data-testid="chart-labels">{JSON.stringify(data.labels)}</div>
+      <div data-testid="chart-datasets">{JSON.stringify(data.datasets)}</div>
+    </div>
+  ),
+}));
 
 describe("Chart", () => {
   const mockPopulationData = {
