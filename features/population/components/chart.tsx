@@ -100,8 +100,8 @@ export default function Chart({ selectedPrefectures, category }: Props) {
 
   if (selectedPrefectures.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96 border rounded bg-gray-50">
-        <p className="text-gray-500">都道府県を選択してください</p>
+      <div className="flex items-center justify-center h-96 rounded">
+        <p className="text-white">都道府県を選択してください</p>
       </div>
     );
   }
