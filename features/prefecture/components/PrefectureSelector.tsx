@@ -2,14 +2,29 @@ import useSWR from "swr";
 import { getPrefectures } from "../fetcher";
 import { PrefectureResponse } from "../types";
 import CheckBox from "./CheckBox";
-export default function PrefectureSelector() {
+
+type Props = {
+  onToggle: (prefCode: number, prefName: string, isChecked: boolean) => void;
+};
+
+export default function PrefectureSelector({ onToggle }: Props) {
   const { data, error, isLoading } = useSWR<PrefectureResponse>(
     "prefecture",
     getPrefectures
   );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading prefectures</div>;
+  }
+
   if (!data) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="grid grid-cols-8 gap-2">
       {data.result.map((prefecture) => (
@@ -17,11 +32,10 @@ export default function PrefectureSelector() {
           <CheckBox
             prefName={prefecture.prefName}
             prefCode={prefecture.prefCode}
+            onToggle={onToggle}
           />
         </div>
       ))}
-      {isLoading && <div>Loading...</div>}
-      {error && <div>Error loading prefectures</div>}
     </div>
   );
 }
