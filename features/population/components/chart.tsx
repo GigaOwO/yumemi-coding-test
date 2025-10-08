@@ -9,8 +9,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { SelectedPrefecture } from "@/app/page";
 import { PopulationCategory } from "../types";
+import { SelectedPrefecture } from "../hooks/usePopulationSelection";
 
 type Props = {
   selectedPrefectures: SelectedPrefecture[];
