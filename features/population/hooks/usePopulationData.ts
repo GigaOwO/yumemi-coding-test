@@ -12,7 +12,7 @@ export function usePopulationData(prefCode: number | null) {
     useSWR<PopulationCompositionPerYearResponse>(
       // prefCodeがnullの場合はフェッチしない
       prefCode !== null ? `population/${prefCode}` : null,
-      () => getPopulationData({ prefCode: prefCode! }),
+      prefCode !== null ? () => getPopulationData({ prefCode }) : null,
       {
         // キャッシュを有効活用するための設定
         revalidateOnFocus: false, // フォーカス時に再検証しない
