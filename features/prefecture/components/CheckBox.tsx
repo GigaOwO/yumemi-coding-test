@@ -36,7 +36,7 @@ export default function CheckBox({ prefName, prefCode, onToggle }: Props) {
         type="checkbox"
         id={prefCode.toString()}
         onChange={handleChange}
-        className="mr-2"
+        className="mr-2 cursor-pointer"
       />
       <label htmlFor={prefCode.toString()} className="cursor-pointer text-sm">
         {prefName}
