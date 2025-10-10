@@ -15,8 +15,13 @@ import { ChartDataProvider } from "./ChartDataProvider";
 import { useState, useEffect, useCallback } from "react";
 import { PopulationCompositionPerYear } from "../types";
 
+/**
+ * Chartコンポーネントのプロパティ
+ */
 type Props = {
+  /** 選択された都道府県のリスト */
   selectedPrefectures: SelectedPrefecture[];
+  /** 表示する人口カテゴリ */
   category: PopulationCategory;
 };
 
@@ -30,11 +35,22 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * 都道府県コードをキーとして、都道府県名と人口データを格納するマップ
+ */
 type PopulationDataMap = Map<
   number,
   { prefName: string; data: PopulationCompositionPerYear | null }
 >;
 
+/**
+ * 複数の都道府県の人口推移を折れ線グラフで表示するコンポーネント
+ *
+ * @param props - コンポーネントのプロパティ
+ * @param props.selectedPrefectures - 選択された都道府県のリスト
+ * @param props.category - 表示する人口カテゴリ（総人口、年少人口等）
+ * @returns 人口推移グラフコンポーネント
+ */
 export default function Chart({ selectedPrefectures, category }: Props) {
   const [populationDataMap, setPopulationDataMap] = useState<PopulationDataMap>(
     new Map()
@@ -57,6 +73,14 @@ export default function Chart({ selectedPrefectures, category }: Props) {
     });
   }, [selectedPrefectures]);
 
+  /**
+   * データが読み込まれたときのコールバック関数
+   * 都道府県ごとのデータをマップに格納する
+   *
+   * @param prefCode - 都道府県コード
+   * @param prefName - 都道府県名
+   * @param data - 人口構成データ
+   */
   const handleDataLoaded = useCallback(
     (
       prefCode: number,

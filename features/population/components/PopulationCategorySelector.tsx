@@ -1,10 +1,24 @@
 import { PopulationCategory } from "@/features/population/constants";
 
+/**
+ * PopulationCategorySelectorコンポーネントのプロパティ
+ */
 type Props = {
+  /** 現在選択されている人口カテゴリ */
   value: PopulationCategory;
+  /** カテゴリが変更されたときのコールバック関数 */
   onChange: (value: PopulationCategory) => void;
 };
 
+/**
+ * 人口データのカテゴリを選択するセレクトボックスコンポーネント
+ * 総人口、年少人口、生産年齢人口、老年人口の中から選択できる
+ *
+ * @param props - コンポーネントのプロパティ
+ * @param props.value - 現在選択されている人口カテゴリ
+ * @param props.onChange - カテゴリが変更されたときのコールバック関数
+ * @returns 人口カテゴリ選択コンポーネント
+ */
 export function PopulationCategorySelector({ value, onChange }: Props) {
   return (
     <div className="mt-8 mb-4">
