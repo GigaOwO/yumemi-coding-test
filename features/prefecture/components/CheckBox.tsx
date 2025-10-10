@@ -31,14 +31,17 @@ export default function CheckBox({ prefName, prefCode, onToggle }: Props) {
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       <input
         type="checkbox"
         id={prefCode.toString()}
         onChange={handleChange}
-        className="mr-2 cursor-pointer"
+        className="cursor-pointer w-4 h-4 sm:w-auto sm:h-auto"
       />
-      <label htmlFor={prefCode.toString()} className="cursor-pointer text-sm">
+      <label
+        htmlFor={prefCode.toString()}
+        className="cursor-pointer text-xs sm:text-sm leading-tight"
+      >
         {prefName}
       </label>
     </div>
