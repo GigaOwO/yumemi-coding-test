@@ -1,4 +1,4 @@
-import { getPopulationData } from "@/features/population/fetcher";
+import { getPopulationData } from "@/features/population/services";
 import { getPrefectures } from "@/features/prefecture/fetcher";
 import { describe, it, expect } from "vitest";
 

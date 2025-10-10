@@ -1,13 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Home from "@/app/page";
-import { getPopulationData } from "@/features/population/fetcher";
 import { PopulationCompositionPerYearResponse } from "@/features/population/types";
 import { PrefectureResponse } from "@/features/prefecture/types";
 import { ChartOptions } from "chart.js";
 
 // モック
-vi.mock("@/features/population/fetcher");
+vi.mock("@/features/population/services/populationService");
 vi.mock("swr", () => ({
   default: vi.fn(),
 }));
@@ -86,15 +85,41 @@ describe("Home", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(useSWR<PrefectureResponse, Error>).mockReturnValue({
-      data: mockPrefectureData,
-      error: undefined,
-      isLoading: false,
-      isValidating: false,
-      mutate: vi.fn(),
+    // デフォルトでは都道府県データを返すSWRモック
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.mocked(useSWR).mockImplementation((key: any) => {
+      // 都道府県リストのSWR
+      if (key === "prefecture") {
+        return {
+          data: mockPrefectureData,
+          error: undefined,
+          isLoading: false,
+          isValidating: false,
+          mutate: vi.fn(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
+      }
+      // 人口データのSWR (population/{prefCode})
+      if (typeof key === "string" && key.startsWith("population/")) {
+        return {
+          data: mockPopulationResponse,
+          error: undefined,
+          isLoading: false,
+          isValidating: false,
+          mutate: vi.fn(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
+      }
+      // それ以外（nullなど）
+      return {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        isValidating: false,
+        mutate: vi.fn(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
     });
-
-    vi.mocked(getPopulationData).mockResolvedValue(mockPopulationResponse);
   });
 
   it("renders main title", () => {
@@ -136,10 +161,7 @@ describe("Home", () => {
     const checkbox = screen.getAllByRole("checkbox")[0] as HTMLInputElement;
     fireEvent.click(checkbox);
 
-    await waitFor(() => {
-      expect(getPopulationData).toHaveBeenCalledWith({ prefCode: 1 });
-    });
-
+    // SWRがデータを返すので、チャートが表示されることを確認
     await waitFor(() => {
       expect(screen.getByTestId("line-chart")).toBeInTheDocument();
     });
@@ -174,17 +196,14 @@ describe("Home", () => {
 
     // 北海道を選択
     fireEvent.click(checkboxes[0]);
-    await waitFor(() => {
-      expect(getPopulationData).toHaveBeenCalledWith({ prefCode: 1 });
-    });
 
     // 青森県を選択
     fireEvent.click(checkboxes[1]);
-    await waitFor(() => {
-      expect(getPopulationData).toHaveBeenCalledWith({ prefCode: 2 });
-    });
 
-    expect(getPopulationData).toHaveBeenCalledTimes(2);
+    // SWRがデータを返すので、チャートが表示されることを確認
+    await waitFor(() => {
+      expect(screen.getByTestId("line-chart")).toBeInTheDocument();
+    });
   });
 
   it("removes prefecture data when checkbox is unchecked", async () => {
@@ -195,7 +214,7 @@ describe("Home", () => {
     // チェックを入れる
     fireEvent.click(checkbox);
     await waitFor(() => {
-      expect(getPopulationData).toHaveBeenCalled();
+      expect(screen.getByTestId("line-chart")).toBeInTheDocument();
     });
 
     // チェックを外す
@@ -209,24 +228,48 @@ describe("Home", () => {
   });
 
   it("handles API error gracefully", async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-    vi.mocked(getPopulationData).mockRejectedValue(new Error("API Error"));
+    // SWRがエラーを返すモックに変更
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.mocked(useSWR).mockImplementation((key: any) => {
+      if (key === "prefecture") {
+        return {
+          data: mockPrefectureData,
+          error: undefined,
+          isLoading: false,
+          isValidating: false,
+          mutate: vi.fn(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
+      }
+      if (typeof key === "string" && key.startsWith("population/")) {
+        return {
+          data: undefined,
+          error: new Error("API Error"),
+          isLoading: false,
+          isValidating: false,
+          mutate: vi.fn(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
+      }
+      return {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        isValidating: false,
+        mutate: vi.fn(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+    });
 
     render(<Home />);
 
     const checkbox = screen.getAllByRole("checkbox")[0] as HTMLInputElement;
     fireEvent.click(checkbox);
 
+    // エラーがあってもアプリがクラッシュしないことを確認
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Failed to fetch population data:",
-        expect.any(Error)
-      );
+      expect(checkbox).toBeChecked();
     });
-
-    consoleErrorSpy.mockRestore();
   });
 
   it("updates chart when category is changed after prefecture selection", async () => {
@@ -262,15 +305,19 @@ describe("Home", () => {
     fireEvent.click(checkboxes[1]);
 
     await waitFor(() => {
-      expect(getPopulationData).toHaveBeenCalledTimes(2);
+      expect(screen.getByTestId("line-chart")).toBeInTheDocument();
     });
 
     // カテゴリを変更
     const select = screen.getByRole("combobox") as HTMLSelectElement;
     fireEvent.change(select, { target: { value: "年少人口" } });
 
-    // データが再取得されないことを確認（状態が保持されている）
-    expect(getPopulationData).toHaveBeenCalledTimes(2);
+    // チャートのタイトルが更新されることを確認
+    await waitFor(() => {
+      expect(screen.getByTestId("chart-title")).toHaveTextContent(
+        "都道府県別人口構成 - 年少人口"
+      );
+    });
   });
 
   it("renders display data label", () => {

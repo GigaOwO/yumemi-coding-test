@@ -1,0 +1,39 @@
+import { useEffect } from "react";
+import { usePopulationData } from "../hooks";
+import { PopulationCompositionPerYear } from "../types";
+
+/**
+ * ChartDataProviderコンポーネントのプロパティ
+ */
+type Props = {
+  /** 都道府県コード */
+  prefCode: number;
+  /** 都道府県名 */
+  prefName: string;
+  /**
+   * データ読み込み完了時のコールバック関数
+   * @param prefCode - 都道府県コード
+   * @param prefName - 都道府県名
+   * @param data - 人口構成データ（取得失敗時はnull）
+   */
+  onDataLoaded: (
+    prefCode: number,
+    prefName: string,
+    data: PopulationCompositionPerYear | null
+  ) => void;
+};
+
+/**
+ * 個別の都道府県のデータを取得し、親コンポーネントに渡すコンポーネント
+ * Reactのフックのルールに従うため、各都道府県ごとに独立したコンポーネントとして実装
+ */
+export function ChartDataProvider({ prefCode, prefName, onDataLoaded }: Props) {
+  const { data } = usePopulationData(prefCode);
+
+  // データが読み込まれたら親に通知（useEffectで制御して無限ループを防ぐ）
+  useEffect(() => {
+    onDataLoaded(prefCode, prefName, data?.result || null);
+  }, [prefCode, prefName, data, onDataLoaded]);
+
+  return null; // このコンポーネントは何もレンダリングしない
+}
