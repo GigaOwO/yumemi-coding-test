@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { usePopulationData } from "../hooks/usePopulationData";
-import { PopulationCompositionPerYear } from "../types/population";
+import { usePopulationData } from "../hooks";
+import { PopulationCompositionPerYear } from "../types";
 
 type Props = {
   prefCode: number;

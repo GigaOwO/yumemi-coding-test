@@ -2,10 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Chart from "@/features/population/components/chart";
 import { ChartOptions } from "chart.js";
-import { PopulationCategory } from "@/features/population/constants/populationCategories";
-import { SelectedPrefecture } from "@/features/population/hooks/usePopulationSelection";
+import { PopulationCategory } from "@/features/population/constants";
+import { SelectedPrefecture } from "@/features/population/hooks";
 import React from "react";
-import { PopulationCompositionPerYear } from "@/features/population/types/population";
+import { PopulationCompositionPerYear } from "@/features/population/types";
 
 // Chart.jsのモック用の型定義
 interface MockLineChartProps {

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Chart from "@/features/population/components/chart";
 import PrefectureSelector from "@/features/prefecture/components/PrefectureSelector";
-import { usePopulationSelection } from "@/features/population/hooks/usePopulationSelection";
-import { PopulationCategory } from "@/features/population/constants/populationCategories";
+import { usePopulationSelection } from "@/features/population/hooks";
+import { PopulationCategory } from "@/features/population/constants";
 import { PopulationCategorySelector } from "@/features/population/components/PopulationCategorySelector";
 
 export default function Home() {

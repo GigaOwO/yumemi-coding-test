@@ -1,4 +1,4 @@
-import { PopulationCategory } from "@/features/population/constants/populationCategories";
+import { PopulationCategory } from "@/features/population/constants";
 
 type Props = {
   value: PopulationCategory;

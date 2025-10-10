@@ -1,4 +1,4 @@
-import { PopulationCompositionPerYearResponse } from "../types/population";
+import { PopulationCompositionPerYearResponse } from "../types";
 
 type GetPopulationDataProps = {
   prefCode: number;

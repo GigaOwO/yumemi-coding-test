@@ -1,0 +1,1 @@
+export { getPopulationData } from "./populationService";

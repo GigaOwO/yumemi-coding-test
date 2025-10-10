@@ -9,11 +9,11 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { PopulationCategory } from "../constants/populationCategories";
-import { SelectedPrefecture } from "../hooks/usePopulationSelection";
+import { PopulationCategory } from "../constants";
+import { SelectedPrefecture } from "../hooks";
 import { ChartDataProvider } from "./ChartDataProvider";
 import { useState, useEffect, useCallback } from "react";
-import { PopulationCompositionPerYear } from "../types/population";
+import { PopulationCompositionPerYear } from "../types";
 
 type Props = {
   selectedPrefectures: SelectedPrefecture[];

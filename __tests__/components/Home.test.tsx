@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Home from "@/app/page";
-import { PopulationCompositionPerYearResponse } from "@/features/population/types/population";
+import { PopulationCompositionPerYearResponse } from "@/features/population/types";
 import { PrefectureResponse } from "@/features/prefecture/types";
 import { ChartOptions } from "chart.js";
 

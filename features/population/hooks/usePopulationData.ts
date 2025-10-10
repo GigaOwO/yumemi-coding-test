@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import { getPopulationData } from "../services/populationService";
-import { PopulationCompositionPerYearResponse } from "../types/population";
+import { getPopulationData } from "../services";
+import { PopulationCompositionPerYearResponse } from "../types";
 
 /**
  * 都道府県ごとの人口データをSWRでキャッシュして取得するカスタムフック
