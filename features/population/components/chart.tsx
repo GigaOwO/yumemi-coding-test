@@ -106,6 +106,10 @@ export default function Chart({ selectedPrefectures, category }: Props) {
         display: true,
         text: `都道府県別人口構成 - ${category}`,
       },
+      tooltip: {
+        mode: "index" as const,
+        intersect: false,
+      },
     },
     scales: {
       y: {
