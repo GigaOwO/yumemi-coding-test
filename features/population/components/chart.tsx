@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { PopulationCategory } from "../constants";
+import { PopulationCategory, CHART_COLORS } from "../constants";
 import { SelectedPrefecture } from "../hooks";
 import { ChartDataProvider } from "./ChartDataProvider";
 import { useState, useEffect, useCallback } from "react";
@@ -29,17 +29,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const COLORS = [
-  "rgb(255, 99, 132)",
-  "rgb(53, 162, 235)",
-  "rgb(75, 192, 192)",
-  "rgb(255, 159, 64)",
-  "rgb(153, 102, 255)",
-  "rgb(255, 205, 86)",
-  "rgb(201, 203, 207)",
-  "rgb(54, 162, 235)",
-];
 
 type PopulationDataMap = Map<
   number,
@@ -132,8 +121,8 @@ export default function Chart({ selectedPrefectures, category }: Props) {
       return {
         label: pref.prefName,
         data: categoryData.data.map((d) => d.value),
-        borderColor: COLORS[index % COLORS.length],
-        backgroundColor: COLORS[index % COLORS.length]
+        borderColor: CHART_COLORS[index % CHART_COLORS.length],
+        backgroundColor: CHART_COLORS[index % CHART_COLORS.length]
           .replace("rgb", "rgba")
           .replace(")", ", 0.5)"),
       };
