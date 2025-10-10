@@ -12,8 +12,10 @@ export default function Home() {
   const [category, setCategory] = useState<PopulationCategory>("総人口");
 
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold mb-6">都道府県別人口構成</h1>
+    <main className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+        都道府県別人口構成
+      </h1>
 
       <PrefectureSelector onToggle={togglePrefecture} />
 

@@ -98,13 +98,28 @@ export default function Chart({ selectedPrefectures, category }: Props) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
+        labels: {
+          boxWidth: 12,
+          padding: 10,
+          font: {
+            size: 11,
+          },
+        },
       },
       title: {
         display: true,
         text: `都道府県別人口構成 - ${category}`,
+        font: {
+          size: 16,
+        },
+      },
+      tooltip: {
+        mode: "index" as const,
+        intersect: false,
       },
     },
     scales: {
@@ -113,11 +128,23 @@ export default function Chart({ selectedPrefectures, category }: Props) {
           display: true,
           text: "人口数",
         },
+        ticks: {
+          font: {
+            size: 10,
+          },
+        },
       },
       x: {
         title: {
           display: true,
           text: "年",
+        },
+        ticks: {
+          font: {
+            size: 10,
+          },
+          maxRotation: 45,
+          minRotation: 0,
         },
       },
     },
@@ -166,14 +193,16 @@ export default function Chart({ selectedPrefectures, category }: Props) {
 
   if (selectedPrefectures.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96 rounded">
-        <p className="text-white">都道府県を選択してください</p>
+      <div className="flex items-center justify-center h-64 sm:h-80 md:h-96 rounded">
+        <p className="text-white text-sm sm:text-base">
+          都道府県を選択してください
+        </p>
       </div>
     );
   }
 
   return (
-    <>
+    <div className="w-full">
       {/* ChartDataProviderコンポーネントを使ってデータを取得 */}
       {selectedPrefectures.map((pref) => (
         <ChartDataProvider
@@ -183,7 +212,9 @@ export default function Chart({ selectedPrefectures, category }: Props) {
           onDataLoaded={handleDataLoaded}
         />
       ))}
-      <Line options={options} data={data} />
-    </>
+      <div className="w-full h-[300px] sm:h-[400px] md:h-[500px]">
+        <Line options={options} data={data} />
+      </div>
+    </div>
   );
 }
