@@ -11,6 +11,9 @@ import {
 import { Line } from "react-chartjs-2";
 import { PopulationCategory } from "../types";
 import { SelectedPrefecture } from "../hooks/usePopulationSelection";
+import { ChartDataProvider } from "./ChartDataProvider";
+import { useState, useEffect, useCallback } from "react";
+import { PopulationCompositionPerYear } from "../types";
 
 type Props = {
   selectedPrefectures: SelectedPrefecture[];
@@ -38,7 +41,48 @@ const COLORS = [
   "rgb(54, 162, 235)",
 ];
 
+type PopulationDataMap = Map<
+  number,
+  { prefName: string; data: PopulationCompositionPerYear | null }
+>;
+
 export default function Chart({ selectedPrefectures, category }: Props) {
+  const [populationDataMap, setPopulationDataMap] = useState<PopulationDataMap>(
+    new Map()
+  );
+
+  // 選択された都道府県が変更されたら、マップを更新
+  useEffect(() => {
+    setPopulationDataMap((prev) => {
+      const newMap = new Map(prev);
+      const selectedCodes = new Set(selectedPrefectures.map((p) => p.prefCode));
+
+      // 選択されていない都道府県のデータを削除
+      for (const [code] of newMap) {
+        if (!selectedCodes.has(code)) {
+          newMap.delete(code);
+        }
+      }
+
+      return newMap;
+    });
+  }, [selectedPrefectures]);
+
+  const handleDataLoaded = useCallback(
+    (
+      prefCode: number,
+      prefName: string,
+      data: PopulationCompositionPerYear | null
+    ) => {
+      setPopulationDataMap((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(prefCode, { prefName, data });
+        return newMap;
+      });
+    },
+    []
+  );
+
   const options = {
     responsive: true,
     plugins: {
@@ -66,8 +110,17 @@ export default function Chart({ selectedPrefectures, category }: Props) {
     },
   };
 
+  // populationDataMapから配列を作成
+  const populationDataList = Array.from(populationDataMap.entries()).map(
+    ([prefCode, { prefName, data }]) => ({
+      prefCode,
+      prefName,
+      data,
+    })
+  );
+
   // データセットの作成
-  const datasets = selectedPrefectures
+  const datasets = populationDataList
     .filter((pref) => pref.data)
     .map((pref, index) => {
       const categoryData = pref.data!.data.find((d) => d.label === category);
@@ -89,8 +142,8 @@ export default function Chart({ selectedPrefectures, category }: Props) {
 
   // X軸のラベル（年）を取得
   const labels =
-    selectedPrefectures.length > 0 && selectedPrefectures[0].data
-      ? selectedPrefectures[0].data.data[0]?.data.map((d) => d.year) || []
+    populationDataList.length > 0 && populationDataList[0].data
+      ? populationDataList[0].data.data[0]?.data.map((d) => d.year) || []
       : [];
 
   const data = {
@@ -106,5 +159,18 @@ export default function Chart({ selectedPrefectures, category }: Props) {
     );
   }
 
-  return <Line options={options} data={data} />;
+  return (
+    <>
+      {/* ChartDataProviderコンポーネントを使ってデータを取得 */}
+      {selectedPrefectures.map((pref) => (
+        <ChartDataProvider
+          key={pref.prefCode}
+          prefCode={pref.prefCode}
+          prefName={pref.prefName}
+          onDataLoaded={handleDataLoaded}
+        />
+      ))}
+      <Line options={options} data={data} />
+    </>
+  );
 }

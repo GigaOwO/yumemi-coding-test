@@ -1,47 +1,27 @@
-import { useState, useRef } from "react";
-import { getPopulationData } from "@/features/population/fetcher";
-import { PopulationCompositionPerYear } from "@/features/population/types";
+import { useState } from "react";
 
 export type SelectedPrefecture = {
   prefCode: number;
   prefName: string;
-  data: PopulationCompositionPerYear | null;
 };
 
+/**
+ * チェックボックスで選択された都道府県を管理するフック
+ * データのフェッチとキャッシュはSWRが担当するため、このフックは選択状態のみを管理
+ */
 export function usePopulationSelection() {
   const [selectedPrefectures, setSelectedPrefectures] = useState<
     SelectedPrefecture[]
   >([]);
-  const loadingRef = useRef<Map<number, boolean>>(new Map());
 
-  async function togglePrefecture(
+  function togglePrefecture(
     prefCode: number,
     prefName: string,
     isChecked: boolean
   ) {
     if (isChecked) {
-      if (loadingRef.current.get(prefCode)) {
-        return;
-      }
-
-      loadingRef.current.set(prefCode, true);
-
-      try {
-        const populationData = await getPopulationData({ prefCode });
-
-        if (loadingRef.current.get(prefCode)) {
-          setSelectedPrefectures((prev) => [
-            ...prev,
-            { prefCode, prefName, data: populationData.result },
-          ]);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        loadingRef.current.delete(prefCode);
-      }
+      setSelectedPrefectures((prev) => [...prev, { prefCode, prefName }]);
     } else {
-      loadingRef.current.delete(prefCode);
       setSelectedPrefectures((prev) =>
         prev.filter((p) => p.prefCode !== prefCode)
       );
