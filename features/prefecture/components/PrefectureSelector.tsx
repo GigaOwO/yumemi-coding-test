@@ -1,12 +1,34 @@
 import useSWR from "swr";
-import { getPrefectures } from "../fetcher";
+import { getPrefectures } from "../services";
 import { PrefectureResponse } from "../types";
 import CheckBox from "./CheckBox";
 
+/**
+ * PrefectureSelectorコンポーネントのプロパティ
+ */
 type Props = {
+  /** 都道府県が選択/選択解除されたときのコールバック関数 */
   onToggle: (prefCode: number, prefName: string, isChecked: boolean) => void;
 };
 
+/**
+ * 都道府県選択UIコンポーネント
+ *
+ * 都道府県一覧を取得し、グリッド形式で表示します。
+ * 各都道府県はチェックボックスで選択可能です。
+ *
+ * @param props - コンポーネントのプロパティ
+ * @returns 都道府県選択UI
+ *
+ * @example
+ * ```tsx
+ * <PrefectureSelector
+ *   onToggle={(code, name, checked) => {
+ *     console.log(`${name} was ${checked ? 'selected' : 'deselected'}`);
+ *   }}
+ * />
+ * ```
+ */
 export default function PrefectureSelector({ onToggle }: Props) {
   const { data, error, isLoading } = useSWR<PrefectureResponse>(
     "prefecture",
