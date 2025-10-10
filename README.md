@@ -19,7 +19,7 @@
 
 ## デモ
 
-[デプロイされたアプリケーションのURL](https://yumemi-coding-test-dusky.vercel.app/)
+[都道府県別人口構成グラフ](https://yumemi-coding-test-dusky.vercel.app/)
 
 ## 技術スタック
 
@@ -68,7 +68,7 @@ yumemi-coding-test/
 ### 前提条件
 
 - Node.js 20.x 以上
-- npm または yarn
+- npm
 
 ### インストール
 
@@ -87,12 +87,13 @@ npm install
 
 3. 環境変数の設定
 
-プロジェクトルートに `.env.local` ファイルを作成し、以下を記述：
+`.env.example` を `.env.local` にコピーし、必要な値を設定：
 
 ```bash
-NEXT_PUBLIC_API_URL=
-NEXT_PUBLIC_API_KEY=
+cp .env.example .env.local
 ```
+
+その後、`.env.local` ファイルを編集し、API_URLとAPIキーを設定してください。
 
 > **注意**: API_URL、APIキーは[RESAS API](https://yumemi-frontend-engineer-codecheck-api.vercel.app/api-doc)から取得してください。
 
@@ -159,20 +160,6 @@ npm run test:coverage
 - **レスポンシブデザイン**: Tailwind CSSを使用したモバイルフレンドリーなUI
 - **ローディング状態の表示**: データ取得中のスケルトンUI
 - **エラーハンドリング**: APIエラーの適切な処理と表示
-
-## デプロイ
-
-### Vercelへのデプロイ
-
-1. [Vercel](https://vercel.com)にプロジェクトをインポート
-2. 環境変数 `NEXT_PUBLIC_API_URL` `NEXT_PUBLIC_API_KEY`を設定
-3. デプロイを実行
-
-```bash
-# または、Vercel CLIを使用
-npm install -g vercel
-vercel
-```
 
 ## ライセンス
 
