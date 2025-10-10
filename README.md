@@ -17,7 +17,7 @@
   - 生産年齢人口
   - 老年人口
 
-## デモ
+## 本番環境
 
 [都道府県別人口構成グラフ](https://yumemi-coding-test-dusky.vercel.app/)
 
