@@ -48,8 +48,12 @@ describe("PrefectureSelector", () => {
       isLoading: true,
     });
 
-    render(<PrefectureSelector onToggle={mockOnToggle} />);
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    const { container } = render(
+      <PrefectureSelector onToggle={mockOnToggle} />
+    );
+    // スケルトンUIが表示されることを確認
+    const skeletonItems = container.querySelectorAll(".animate-pulse");
+    expect(skeletonItems.length).toBeGreaterThan(0);
   });
 
   it("displays error message when fetch fails", () => {

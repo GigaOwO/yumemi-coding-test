@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { getPrefectures } from "../services";
 import { PrefectureResponse } from "../types";
 import CheckBox from "./CheckBox";
+import PrefectureSelectorSkeleton from "./PrefectureSelectorSkeleton";
 
 /**
  * PrefectureSelectorコンポーネントのプロパティ
@@ -36,7 +37,7 @@ export default function PrefectureSelector({ onToggle }: Props) {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PrefectureSelectorSkeleton />;
   }
 
   if (error) {
@@ -44,7 +45,7 @@ export default function PrefectureSelector({ onToggle }: Props) {
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <PrefectureSelectorSkeleton />;
   }
 
   return (
