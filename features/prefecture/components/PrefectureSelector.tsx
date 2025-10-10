@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { getPrefectures } from "../fetcher";
+import { getPrefectures } from "../services";
 import { PrefectureResponse } from "../types";
 import CheckBox from "./CheckBox";
 

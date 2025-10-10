@@ -1,4 +1,4 @@
-import { PrefectureResponse } from "./types";
+import { PrefectureResponse } from "../types";
 
 export async function getPrefectures(): Promise<PrefectureResponse> {
   const res = await fetch(

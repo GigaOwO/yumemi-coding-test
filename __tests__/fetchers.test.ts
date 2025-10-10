@@ -1,5 +1,5 @@
 import { getPopulationData } from "@/features/population/services";
-import { getPrefectures } from "@/features/prefecture/fetcher";
+import { getPrefectures } from "@/features/prefecture/services";
 import { describe, it, expect } from "vitest";
 
 describe("API Fetchers (integration)", () => {
