@@ -2,9 +2,20 @@ import { useEffect } from "react";
 import { usePopulationData } from "../hooks";
 import { PopulationCompositionPerYear } from "../types";
 
+/**
+ * ChartDataProviderコンポーネントのプロパティ
+ */
 type Props = {
+  /** 都道府県コード */
   prefCode: number;
+  /** 都道府県名 */
   prefName: string;
+  /**
+   * データ読み込み完了時のコールバック関数
+   * @param prefCode - 都道府県コード
+   * @param prefName - 都道府県名
+   * @param data - 人口構成データ（取得失敗時はnull）
+   */
   onDataLoaded: (
     prefCode: number,
     prefName: string,
