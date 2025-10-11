@@ -9,7 +9,8 @@ type GetPopulationDataProps = {
 };
 
 /**
- * 指定された都道府県の人口構成データをRESAS APIから取得する
+ * 指定された都道府県の人口構成データを取得する
+ * 内部のルートハンドラ経由でRESAS APIからデータを取得する
  *
  * @param params - パラメータオブジェクト
  * @param params.prefCode - 都道府県コード
@@ -19,15 +20,11 @@ type GetPopulationDataProps = {
 export async function getPopulationData({
   prefCode,
 }: GetPopulationDataProps): Promise<PopulationCompositionPerYearResponse> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/population/composition/perYear?prefCode=${prefCode}`,
-    {
-      headers: {
-        "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY ?? "",
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const res = await fetch(`/api/population?prefCode=${prefCode}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch population data");
   }
