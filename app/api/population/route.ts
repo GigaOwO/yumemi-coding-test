@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PopulationCompositionPerYearResponse } from "@/features/population/types";
+import { getEnv } from "@/lib/env";
 
 /**
  * 人口構成データを取得するAPIルートハンドラ
@@ -17,15 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const apiUrl = process.env.API_URL;
-    const apiKey = process.env.API_KEY;
-
-    if (!apiUrl || !apiKey) {
-      return NextResponse.json(
-        { error: "API configuration is missing" },
-        { status: 500 }
-      );
-    }
+    const { apiUrl, apiKey } = getEnv();
 
     const res = await fetch(
       `${apiUrl}/api/v1/population/composition/perYear?prefCode=${prefCode}`,

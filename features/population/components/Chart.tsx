@@ -81,7 +81,7 @@ export default function Chart({ selectedPrefectures, category }: Props) {
 
   return (
     <div className="w-full">
-      {/* ChartDataProviderコンポーネントを使ってデータを取得 */}
+      {/* 各都道府県のデータを個別にフェッチ（Reactのフックルールに準拠） */}
       {selectedPrefectures.map((pref) => (
         <ChartDataProvider
           key={pref.prefCode}

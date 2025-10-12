@@ -64,7 +64,11 @@ describe("PrefectureSelector", () => {
     });
 
     render(<PrefectureSelector onToggle={mockOnToggle} />);
-    expect(screen.getByText("Error loading prefectures")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "都道府県データの読み込みに失敗しました。ページを再読み込みしてください。"
+      )
+    ).toBeInTheDocument();
   });
 
   it("renders all prefectures when data is loaded", () => {

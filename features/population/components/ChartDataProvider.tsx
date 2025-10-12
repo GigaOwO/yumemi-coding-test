@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePopulationData } from "../hooks";
 import { PopulationCompositionPerYear } from "../types";
 
@@ -26,14 +26,20 @@ type Props = {
 /**
  * 個別の都道府県のデータを取得し、親コンポーネントに渡すコンポーネント
  * Reactのフックのルールに従うため、各都道府県ごとに独立したコンポーネントとして実装
+ * SWRによるキャッシングを活用しつつ、データが変更されたときのみ親に通知
  */
 export function ChartDataProvider({ prefCode, prefName, onDataLoaded }: Props) {
   const { data } = usePopulationData(prefCode);
+  const prevDataRef = useRef<typeof data>(undefined);
 
-  // データが読み込まれたら親に通知（useEffectで制御して無限ループを防ぐ）
+  // データが変更されたときのみ親に通知（無限ループ防止）
   useEffect(() => {
-    onDataLoaded(prefCode, prefName, data?.result || null);
-  }, [prefCode, prefName, data, onDataLoaded]);
+    // データが実際に変更された場合のみコールバックを実行
+    if (prevDataRef.current !== data) {
+      prevDataRef.current = data;
+      onDataLoaded(prefCode, prefName, data?.result || null);
+    }
+  }, [data, prefCode, prefName, onDataLoaded]);
 
   return null; // このコンポーネントは何もレンダリングしない
 }

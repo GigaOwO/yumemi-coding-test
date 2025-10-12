@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { PopulationCompositionPerYear } from "../types";
+import { useState, useCallback, useEffect } from "react";
 import { SelectedPrefecture } from "./usePopulationSelection";
 import { PopulationDataMap } from "../utils/chartDataTransform";
+import { PopulationCompositionPerYear } from "../types";
 
 /**
  * チャートデータの状態管理を行うカスタムフック
+ * 選択された都道府県のデータをマップとして管理する
  *
  * @param selectedPrefectures - 選択された都道府県のリスト
  * @returns 人口データマップとデータ読み込みコールバック
@@ -14,7 +15,7 @@ export function useChartData(selectedPrefectures: SelectedPrefecture[]) {
     new Map()
   );
 
-  // 選択された都道府県が変更されたら、マップを更新
+  // 選択された都道府県が変更されたら、選択解除されたものを削除
   useEffect(() => {
     setPopulationDataMap((prev) => {
       const newMap = new Map(prev);

@@ -6,12 +6,14 @@ type Props = {
   prefName: string;
   /** 都道府県コード */
   prefCode: number;
+  /** チェックボックスの選択状態 */
+  checked?: boolean;
   /** チェックボックスの状態が変更されたときのコールバック関数 */
   onToggle: (prefCode: number, prefName: string, isChecked: boolean) => void;
 };
 
 /**
- * 都道府県選択用のチェックボックスコンポーネント
+ * 都道府県選択用のチェックボックスコンポーネント（制御コンポーネント）
  *
  * @param props - コンポーネントのプロパティ
  * @returns チェックボックス要素
@@ -21,11 +23,17 @@ type Props = {
  * <CheckBox
  *   prefName="東京都"
  *   prefCode={13}
+ *   checked={true}
  *   onToggle={(code, name, checked) => console.log(code, name, checked)}
  * />
  * ```
  */
-export default function CheckBox({ prefName, prefCode, onToggle }: Props) {
+export default function CheckBox({
+  prefName,
+  prefCode,
+  checked = false,
+  onToggle,
+}: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onToggle(prefCode, prefName, e.target.checked);
   };
@@ -35,6 +43,7 @@ export default function CheckBox({ prefName, prefCode, onToggle }: Props) {
       <input
         type="checkbox"
         id={prefCode.toString()}
+        checked={checked}
         onChange={handleChange}
         className="cursor-pointer w-4 h-4 sm:w-auto sm:h-auto"
       />

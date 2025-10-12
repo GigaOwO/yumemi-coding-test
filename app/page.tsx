@@ -11,13 +11,21 @@ export default function Home() {
   const { selectedPrefectures, togglePrefecture } = usePopulationSelection();
   const [category, setCategory] = useState<PopulationCategory>("総人口");
 
+  // 選択された都道府県のコードセットを作成
+  const selectedPrefCodes = new Set(
+    selectedPrefectures.map((pref) => pref.prefCode)
+  );
+
   return (
     <main className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
         都道府県別人口構成
       </h1>
 
-      <PrefectureSelector onToggle={togglePrefecture} />
+      <PrefectureSelector
+        selectedPrefCodes={selectedPrefCodes}
+        onToggle={togglePrefecture}
+      />
 
       <PopulationCategorySelector value={category} onChange={setCategory} />
 

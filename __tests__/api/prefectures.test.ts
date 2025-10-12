@@ -48,7 +48,7 @@ describe("GET /api/prefectures", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ error: "API configuration is missing" });
+    expect(data).toEqual({ error: "Internal server error" });
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -59,7 +59,7 @@ describe("GET /api/prefectures", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ error: "API configuration is missing" });
+    expect(data).toEqual({ error: "Internal server error" });
     expect(fetch).not.toHaveBeenCalled();
   });
 

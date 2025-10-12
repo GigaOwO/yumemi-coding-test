@@ -4,6 +4,7 @@ import Home from "@/app/page";
 import { PopulationCompositionPerYearResponse } from "@/features/population/types";
 import { PrefectureResponse } from "@/features/prefecture/types";
 import { ChartOptions } from "chart.js";
+import type { SWRResponse, Key } from "swr";
 
 // モック
 vi.mock("@/features/population/services/populationService");
@@ -86,29 +87,26 @@ describe("Home", () => {
     vi.clearAllMocks();
 
     // デフォルトでは都道府県データを返すSWRモック
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useSWR).mockImplementation((key: any) => {
+    vi.mocked(useSWR).mockImplementation(<T,>(key: Key) => {
       // 都道府県リストのSWR
       if (key === "prefecture") {
         return {
-          data: mockPrefectureData,
+          data: mockPrefectureData as T,
           error: undefined,
           isLoading: false,
           isValidating: false,
           mutate: vi.fn(),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
+        } as SWRResponse<T, Error>;
       }
       // 人口データのSWR (population/{prefCode})
       if (typeof key === "string" && key.startsWith("population/")) {
         return {
-          data: mockPopulationResponse,
+          data: mockPopulationResponse as T,
           error: undefined,
           isLoading: false,
           isValidating: false,
           mutate: vi.fn(),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
+        } as SWRResponse<T, Error>;
       }
       // それ以外（nullなど）
       return {
@@ -117,8 +115,7 @@ describe("Home", () => {
         isLoading: false,
         isValidating: false,
         mutate: vi.fn(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as SWRResponse<T, Error>;
     });
   });
 
