@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Chart from "@/features/population/components/chart";
+import Chart from "@/features/population/components/Chart";
 import PrefectureSelector from "@/features/prefecture/components/PrefectureSelector";
 import { usePopulationSelection } from "@/features/population/hooks";
 import { PopulationCategory } from "@/features/population/constants";
