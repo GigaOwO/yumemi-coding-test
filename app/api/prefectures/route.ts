@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrefectureResponse } from "@/features/prefecture/types";
+import { getEnv } from "@/lib/env";
 
 /**
  * 都道府県一覧を取得するAPIルートハンドラ
@@ -7,15 +8,7 @@ import { PrefectureResponse } from "@/features/prefecture/types";
  */
 export async function GET() {
   try {
-    const apiUrl = process.env.API_URL;
-    const apiKey = process.env.API_KEY;
-
-    if (!apiUrl || !apiKey) {
-      return NextResponse.json(
-        { error: "API configuration is missing" },
-        { status: 500 }
-      );
-    }
+    const { apiUrl, apiKey } = getEnv();
 
     const res = await fetch(`${apiUrl}/api/v1/prefectures`, {
       headers: {

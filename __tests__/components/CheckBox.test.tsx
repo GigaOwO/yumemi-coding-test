@@ -33,14 +33,11 @@ describe("CheckBox", () => {
   });
 
   it("calls onToggle with correct parameters when unchecked", () => {
-    render(<CheckBox {...defaultProps} />);
+    // 最初はチェック済みの状態でレンダリング
+    render(<CheckBox {...defaultProps} checked={true} />);
     const checkbox = screen.getByRole("checkbox") as HTMLInputElement;
 
-    // Check first
-    fireEvent.click(checkbox);
-    mockOnToggle.mockClear();
-
-    // Then uncheck
+    // チェックを外す
     fireEvent.click(checkbox);
 
     expect(mockOnToggle).toHaveBeenCalledWith(1, "北海道", false);
@@ -65,5 +62,22 @@ describe("CheckBox", () => {
     expect(screen.getByText("青森県")).toBeValid();
     const checkbox = screen.getByRole("checkbox");
     expect(checkbox).toHaveAttribute("id", "2");
+  });
+
+  it("reflects checked prop correctly", () => {
+    const { rerender } = render(<CheckBox {...defaultProps} checked={false} />);
+    let checkbox = screen.getByRole("checkbox") as HTMLInputElement;
+    expect(checkbox.checked).toBe(false);
+
+    // checkedプロップを変更
+    rerender(<CheckBox {...defaultProps} checked={true} />);
+    checkbox = screen.getByRole("checkbox") as HTMLInputElement;
+    expect(checkbox.checked).toBe(true);
+  });
+
+  it("defaults to unchecked when checked prop is not provided", () => {
+    render(<CheckBox {...defaultProps} />);
+    const checkbox = screen.getByRole("checkbox") as HTMLInputElement;
+    expect(checkbox.checked).toBe(false);
   });
 });
