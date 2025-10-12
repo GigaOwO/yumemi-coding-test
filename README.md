@@ -46,21 +46,51 @@ yumemi-coding-test/
 ├── app/                          # Next.js App Router
 │   ├── page.tsx                 # メインページ
 │   ├── layout.tsx               # ルートレイアウト
-│   └── globals.css              # グローバルスタイル
-├── features/                    # 機能別モジュール
-│   ├── population/              # 人口データ関連
-│   │   ├── components/         # 人口グラフコンポーネント
+│   ├── globals.css              # グローバルスタイル
+│   └── api/                     # APIルート
+│       ├── population/          # 人口データAPI
+│       └── prefectures/         # 都道府県API
+├── features/                    # 機能別モジュール（Feature-based設計）
+│   ├── population/              # 人口データ機能
+│   │   ├── components/         # 人口グラフ関連コンポーネント
+│   │   │   ├── Chart.tsx                      # グラフ描画コンポーネント
+│   │   │   ├── ChartDataProvider.tsx          # グラフデータプロバイダー
+│   │   │   └── PopulationCategorySelector.tsx # カテゴリ選択UI
 │   │   ├── hooks/              # カスタムフック
-│   │   ├── services/           # API通信ロジック
+│   │   │   ├── useChartData.ts            # グラフデータ管理
+│   │   │   ├── usePopulationData.ts       # 人口データ取得
+│   │   │   └── usePopulationSelection.ts  # 選択状態管理
+│   │   ├── services/           # API通信サービス
+│   │   │   └── populationService.ts       # 人口データAPI呼び出し
 │   │   ├── types/              # 型定義
-│   │   └── constants/          # 定数（カラー、カテゴリ等）
-│   └── prefecture/              # 都道府県関連
-│       ├── components/         # 都道府県選択コンポーネント
-│       ├── services/           # API通信ロジック
-│       └── types/              # 型定義
+│   │   │   └── population.ts              # 人口データ型
+│   │   ├── constants/          # 定数
+│   │   │   ├── chartColors.ts             # グラフカラー設定
+│   │   │   └── populationCategories.ts    # 人口カテゴリ定義
+│   │   ├── config/             # 設定
+│   │   │   └── chartConfig.ts             # Chart.js設定
+│   │   └── utils/              # ユーティリティ
+│   │       └── chartDataTransform.ts      # データ変換ロジック
+│   └── prefecture/              # 都道府県機能
+│       ├── components/         # 都道府県選択関連コンポーネント
+│       │   ├── CheckBox.tsx                   # チェックボックス
+│       │   ├── PrefectureSelector.tsx         # 都道府県セレクター
+│       │   └── PrefectureSelectorSkeleton.tsx # ローディングUI
+│       ├── services/           # API通信サービス
+│       │   └── prefectureService.ts       # 都道府県API呼び出し
+│       ├── types/              # 型定義
+│       │   └── prefecture.ts              # 都道府県データ型
+│       └── constants/          # 定数
+│           └── prefecture.ts              # 都道府県関連定数
+├── lib/                         # 共通ライブラリ
+│   └── env.ts                   # 環境変数管理
 ├── __tests__/                   # テストファイル
+│   ├── api/                     # APIルートテスト
+│   ├── components/              # コンポーネントテスト
+│   └── services/                # サービステスト
 ├── public/                      # 静的ファイル
 └── types/                       # 共通型定義
+    └── css.d.ts                 # CSS型定義
 ```
 
 ## 環境構築
